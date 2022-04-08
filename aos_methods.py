@@ -67,12 +67,18 @@ def create_new_account():
     sleep(0.25)
     driver.find_element(By.ID,"register_btnundefined").click()
     sleep(0.25)
-    breakpoint()
-    #check usename is displayed
-    driver.find_element(By.XPATH, "//span[@class='hi-user containMiniTitle ng-binding']").is_displayed()
-    print(f'username {locators.aos_username}displayed at the top menu')
-    sleep(0.25)
-    print("\n")
+
+
+#check usename is displayed
+def check_username_display():
+    print('----------*check username displayed*----------')
+    try:
+        assert driver.find_element(By.XPATH, "//span[@class='hi-user containMiniTitle ng-binding']").is_displayed()
+        print(f'username {locators.aos_username} displayed at the top menu')
+        sleep(0.25)
+    except:
+        print('username is not displayed')
+
 
 def logOut():
     print('----------------*log out *-----------------')
@@ -93,35 +99,9 @@ def logIn(username,password):
     driver.find_element(By.XPATH,"//button[@id='sign_in_btnundefined']").click()
     sleep(0.25)
     print(f'user {locators.full_name} is logged in successfully at:{datetime.datetime.now()}')
-    driver.find_element(By.XPATH,"//span[@class='hi-user containMiniTitle ng-binding']").is_displayed()
-    print('username displayed at the top menu')
-#Lab 4
-def validate_dash_borad():
-    print('--------------*validate dashboard*-------------')
-    #check the advantageDEMO logo is present
-    sleep(2)
-    display = driver.find_element(By.XPATH,"//div[@class='logo']/a").is_displayed()
-    sleep(0.25)
-    if display:
-        print('--dashborad logo for AOS is displayed--')
-    else:
-        print('--dashborad logo for AOS is not displayed--')
-    #check SPEAKER text is diplayed
-    display = driver.find_element(By.XPATH, "//span[@id ='speakersTxt']").is_displayed()
-    sleep(0.25)
-    if display:
-        print('--SPEAKERS text  is displayed--')
-    else:
-        print('--SPEAKERS text is not displayed--')
-    #check TABLETS text is displayed
-    display = driver.find_element(By.XPATH, "//span[@id ='speakersTxt']").is_displayed()
-    sleep(0.25)
-    if display:
-        print('-- text  is displayed--')
-    else:
-        print('--SPEAKERS text is not displayed--')
+    #assert driver.find_element(By.XPATH,"//span[@class='hi-user containMiniTitle ng-binding']").is_displayed()
+    #print('username displayed at the top menu')
 
-#
 
 
 

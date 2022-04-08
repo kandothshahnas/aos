@@ -9,7 +9,9 @@ class AOSPositiveTestCases(unittest.TestCase):
     def test_create_new_user():
         methods.setup()
         methods.create_new_account()
+        methods.check_username_display()
         methods.logOut()
         methods.logIn(locators.aos_username, locators.aos_password)
+        methods.check_username_display()
         methods.logOut()
         methods.teardown()
