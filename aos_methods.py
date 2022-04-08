@@ -13,10 +13,10 @@ aos_url = 'https://advantageonlineshopping.com/'
 def setup():
     print('-------------------------------*set up*----------------------')
     print(f'-----------Test started @{datetime.datetime.now()}------------------')
-#maximise window
+    #maximise window
     driver.maximize_window()
     driver.implicitly_wait(30)
-#navigate to advantageshoppingonline webpage
+    #navigate to advantageshoppingonline webpage
     driver.get(locators.aos_url)
     aos_title =driver.title
     if driver.current_url == locators.aos_url and driver.title == aos_title:
@@ -38,7 +38,7 @@ def create_new_account():
     print('-------------------*create new account*--------------')
     driver.implicitly_wait(3)
     assert driver.find_element(By.ID,'menuUser').is_displayed()
-#    driver.implicitly_wait(3)
+    #driver.implicitly_wait(3)
     driver.find_element(By.ID,'menuUser').click()
     sleep(3)
     driver.find_element(By.XPATH, "//a[@class = 'create-new-account ng-scope']").click()
@@ -67,10 +67,10 @@ def create_new_account():
     sleep(0.25)
     driver.find_element(By.ID,"register_btnundefined").click()
     sleep(0.25)
-#check usename is displayed
-    if driver.find_element(By.XPATH,"//a[@id ='menuUserLink']/div") is not None:
-        print(f'user is created successfully @{datetime.datetime.now()}')
-        print(f'new account is created with username: {locators.aos_username} and password:{locators.aos_password}')
+    breakpoint()
+    #check usename is displayed
+    driver.find_element(By.XPATH, "//span[@class='hi-user containMiniTitle ng-binding']").is_displayed()
+    print(f'username {locators.aos_username}displayed at the top menu')
     sleep(0.25)
     print("\n")
 
@@ -95,11 +95,38 @@ def logIn(username,password):
     print(f'user {locators.full_name} is logged in successfully at:{datetime.datetime.now()}')
     driver.find_element(By.XPATH,"//span[@class='hi-user containMiniTitle ng-binding']").is_displayed()
     print('username displayed at the top menu')
+#Lab 4
+def validate_dash_borad():
+    print('--------------*validate dashboard*-------------')
+    #check the advantageDEMO logo is present
+    sleep(2)
+    display = driver.find_element(By.XPATH,"//div[@class='logo']/a").is_displayed()
+    sleep(0.25)
+    if display:
+        print('--dashborad logo for AOS is displayed--')
+    else:
+        print('--dashborad logo for AOS is not displayed--')
+    #check SPEAKER text is diplayed
+    display = driver.find_element(By.XPATH, "//span[@id ='speakersTxt']").is_displayed()
+    sleep(0.25)
+    if display:
+        print('--SPEAKERS text  is displayed--')
+    else:
+        print('--SPEAKERS text is not displayed--')
+    #check TABLETS text is displayed
+    display = driver.find_element(By.XPATH, "//span[@id ='speakersTxt']").is_displayed()
+    sleep(0.25)
+    if display:
+        print('-- text  is displayed--')
+    else:
+        print('--SPEAKERS text is not displayed--')
 
+#
 
 
 
 #setup()
+#validate_dash_borad()
 #create_new_account()
 #logOut()
 #logIn()
