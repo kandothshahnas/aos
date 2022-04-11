@@ -84,28 +84,29 @@ def check_username_display():#check usename is displayed
         print('username is not displayed')
 
 
-def logOut():#log out user from AOS app
-    print('----------------*log out *-----------------')
-    driver.find_element(By.XPATH, "//span[@class='hi-user containMiniTitle ng-binding']").click()
-    driver.find_element(By.XPATH,"//div[@class='mini-title']/label[@href='javascript:void(0)'][3]").click()
+def logout():#log out user from AOS app
+    print('----------------*log out*-----------------')
+    driver.find_element(By.XPATH, "//a[@id='hrefUserIcon']").click()
+    driver.find_element(By.XPATH, "// div[ @ id = 'loginMiniTitle'] / label[3]").click()
+    # breakpoint()
     print(f'user  logged out successfuly at :{datetime.datetime.now()}')
 
 
-def logIn(username,password):# log in user to AOS app
+def login():# log in user to AOS app
     print("----------------*log in*-------------------")
     driver.get(locators.aos_url)
+    driver.implicitly_wait(3)
     driver.find_element(By.ID, 'menuUser').click()
-    sleep(3)
-    driver.find_element(By.XPATH,"//input[@name='username']").send_keys(username)
+    driver.find_element(By.XPATH,"//input[@name='username']").send_keys(locators.aos_username)
     sleep(1)
-    driver.find_element(By.XPATH,"//input[@name='password']").send_keys(password)
+    driver.find_element(By.XPATH,"//input[@name='password']").send_keys(locators.aos_password)
     sleep(1)
     driver.find_element(By.XPATH,"//button[@id='sign_in_btnundefined']").click()
     sleep(1)
     print(f'user {locators.full_name} is logged in successfully at:{datetime.datetime.now()}')
 
 #Validate main page of AOS app
-def validate_dash_borad():
+def validate_dash_board():
     print('--------------*validate dashboard*-------------')
     # check the advantageDEMO logo is present
     sleep(2)
@@ -207,9 +208,9 @@ def validate_dash_borad():
         print('--top menu CONTACT_US link is not clicked')
     # check CONTACT US form by sending a form
     print('-----------------*CONTACT US FORM*------------------')
-    Select(driver.find_element(By.NAME, "categoryListboxContactUs")).select_by_index(0)
+    Select(driver.find_element(By.NAME, "categoryListboxContactUs")).select_by_index(1)
     sleep(1)
-    Select(driver.find_element(By.NAME, 'productListboxContactUs')).select_by_index(0)
+    Select(driver.find_element(By.NAME, 'productListboxContactUs')).select_by_index(1)
     sleep(1)
     driver.find_element(By.NAME, 'emailContactUs').send_keys(locators.aos_email)
     driver.find_element(By.NAME, 'subjectTextareaContactUs').send_keys(locators.contact_text)
@@ -268,15 +269,15 @@ def validate_dash_borad():
     sleep(1)
     driver.switch_to.window(window_after_linkedIn)
     sleep(10)
-    driver.find_element(By.XPATH, "//div[@class ='header-logo']/a[@title='LinkedIn']").click()
-    sleep(2)
-    if driver.current_url == locators.linkedIn_url:
-        print(f'--linkedIn link image is clicked and navigated to {driver.current_url}')
+    if  'linkedin' in driver.current_url:
+        print('--linkedIn link image is clicked ')
         driver.close()
         driver.switch_to.window(window_before)
         sleep(10)
     else:
         print('--linkedIn image link is not clicked')
+        driver.switch_to.window(window_before)
+        sleep(10)
     # check top menu SEARCH is clickable
     driver.find_element(By.XPATH, "//a[@title = 'SEARCH']").click()
     sleep(1)
@@ -321,7 +322,6 @@ def validate_dash_borad():
     else:
         driver.get(locators.aos_url)
         driver.implicitly_wait(3)
-        # speaker = driver.find_element(By.XPATH, "//label[@id='speakersLink']")
         speaker = driver.find_element(By.ID, 'speakersLink')
         sleep(1)
         ActionChains(driver).move_to_element(speaker).click(speaker).perform()
@@ -421,11 +421,79 @@ def validate_dash_borad():
         else:
             print('--shop now link for HEADPHONES is not clicked')
 
+def check_out_shopping_cart():
+    print('------------*checkout shopping cart*---------')
+    #random.choice([i for i in range(1, 35) if i != 13])
+    driver.find_element(By.XPATH, "//a[contains(text(),'POPULAR ITEMS')]").click()
+    sleep(2)
+    driver.find_element(By.XPATH,"//a[@href='#/product/16']").click()
+    sleep(1)
+    driver.find_element(By.XPATH,"// button[ @ name = 'save_to_cart']").click()
+    print('--item added to cart')
+    sleep(1)
+    driver.find_element(By.ID, "menuCart").click()
+    sleep(2)
+    driver.find_element(By.ID,"checkOutButton").click()
+    #sleep(0.25)
+    # print('---clicked')
+    driver.implicitly_wait(10)
+    driver.find_element(By.XPATH,"//button[contains(text(),'NEXT')]").click()
+
+    #driver.find_element(By.XPATH,"//button[@class='a-button nextBtn marginTop75 ng-scope']").click()
+    sleep(1)
+    driver.find_element(By.NAME,"safepay_username").send_keys(locators.aos_username)
+    sleep(1)
+    driver.find_element(By.NAME,"safepay_password").send_keys(locators.aos_password)
+    sleep(1)
+    driver.find_element(By.ID,"pay_now_btn_SAFEPAY").click()
+    sleep(2)
+    if driver.find_element(By.XPATH,"//span[@class='roboto-regular ng-scope']").text=='Thank_you_for_buying_with_Advantage':
+        print('--Order placed and Thank_you_for_buying_with_Advantage message is displayed')
+    else:
+        print('Thank_you_for_buying_with_Advantage not displayed')
+    locators.tracking_no = driver.find_element(By.XPATH,"//label[@id='trackingNumberLabel']").text
+    print(f'--Tracking Number: {locators.tracking_no}')
+
+    locators.order_no = driver.find_element(By.XPATH,"//label[@id='orderNumberLabel']").text
+    print(f'--Order Number: {locators.order_no}')
+
+    locators.order_date = driver.find_element(By.XPATH,"//label[contains(.,'Date ordered')]").text
+    print(f'--Order date: {locators.order_date}')
+    fname_order = driver.find_element(By.XPATH,f"//div[ contains(.,{locators.full_name}) and @class ='innerSeccion' ]").text
+    if fname_order == locators.full_name:
+        print('--full name of user is displayed in order confirmation page')
+    else:
+        print('--user s full name is not displayed')
+    sleep(1)
+
+
+def validate_order():
+    driver.find_element(By.XPATH, "// div[ @ id = 'loginMiniTitle'] / label[2]").click()
+    sleep(1)
+    if driver.find_element(By.XPATH,f'//td[@rowspan="1f"]/label[contains(text(),'
+                                 f'"{locators.order_no}")]').text == locators.order_no:
+        print(f'Order with order number {locators.order_no} is displayed in My Orders')
+    else:
+        print('--Order not found')
+    sleep(1)
+    driver.find_element(By.XPATH,"//a[@class='remove red ng-scope']").click()
+    sleep(1)
+    if driver.find_element(By.XPATH,f'//td[@rowspan="1f"]/label[contains(text(),'
+                                 f'"{locators.order_no}")]').text == locators.order_no:
+        print(f'Order with order number {locators.order_no} is not removed from My Orders')
+    else:
+        print(f'--Order not found, Hence, {locators.order_no} is removed')
+
+
+
 # setup()
-# validate_dash_borad()
-# # create_new_account()
-# # check_username_display()
-# # logOut()
-# # logIn(locators.aos_username,locators.aos_password)
-# # logOut()
+# validate_dash_board()
+# create_new_account()
+# check_username_display()
+# logout()
+# login()
+# check_out_shopping_cart()
+# logout()
+# login()
+# validate_order()
 # teardown()
