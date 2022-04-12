@@ -1,5 +1,6 @@
 import datetime
 from time import sleep
+from selenium.common.exceptions import NoSuchElementException
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
@@ -82,6 +83,7 @@ def check_username_display():#check usename is displayed
             print(f'username {logged_in_username} is displayed at the top menu')
     else:
         print('username is not displayed')
+    sleep(1)
 
 
 def logout():#log out user from AOS app
@@ -90,6 +92,7 @@ def logout():#log out user from AOS app
     driver.find_element(By.XPATH, "// div[ @ id = 'loginMiniTitle'] / label[3]").click()
     # breakpoint()
     print(f'user  logged out successfuly at :{datetime.datetime.now()}')
+    sleep(1)
 
 
 def login():# log in user to AOS app
@@ -430,7 +433,7 @@ def check_out_shopping_cart():
     sleep(1)
     driver.find_element(By.XPATH,"// button[ @ name = 'save_to_cart']").click()
     print('--item added to cart')
-    sleep(1)
+    sleep(2)
     driver.find_element(By.ID, "menuCart").click()
     sleep(2)
     driver.find_element(By.ID,"checkOutButton").click()
@@ -438,62 +441,87 @@ def check_out_shopping_cart():
     # print('---clicked')
     driver.implicitly_wait(10)
     driver.find_element(By.XPATH,"//button[contains(text(),'NEXT')]").click()
-
-    #driver.find_element(By.XPATH,"//button[@class='a-button nextBtn marginTop75 ng-scope']").click()
     sleep(1)
     driver.find_element(By.NAME,"safepay_username").send_keys(locators.aos_username)
     sleep(1)
     driver.find_element(By.NAME,"safepay_password").send_keys(locators.aos_password)
     sleep(1)
     driver.find_element(By.ID,"pay_now_btn_SAFEPAY").click()
-    sleep(2)
+    sleep(1)
     if driver.find_element(By.XPATH,"//span[@class='roboto-regular ng-scope']").text=='Thank_you_for_buying_with_Advantage':
         print('--Order placed and Thank_you_for_buying_with_Advantage message is displayed')
     else:
         print('Thank_you_for_buying_with_Advantage not displayed')
+    sleep(1)
     locators.tracking_no = driver.find_element(By.XPATH,"//label[@id='trackingNumberLabel']").text
     print(f'--Tracking Number: {locators.tracking_no}')
-
+    sleep(1)
     locators.order_no = driver.find_element(By.XPATH,"//label[@id='orderNumberLabel']").text
     print(f'--Order Number: {locators.order_no}')
-
+    sleep(1)
     locators.order_date = driver.find_element(By.XPATH,"//label[contains(.,'Date ordered')]").text
     print(f'--Order date: {locators.order_date}')
-    fname_order = driver.find_element(By.XPATH,f"//div[ contains(.,{locators.full_name}) and @class ='innerSeccion' ]").text
-    if fname_order == locators.full_name:
-        print('--full name of user is displayed in order confirmation page')
-    else:
-        print('--user s full name is not displayed')
     sleep(1)
+    assert driver.find_element(By.XPATH,"//*[@id='orderPaymentSuccess']/div/div[1]/div/div[1]/label").is_displayed()
+    print('--Full name of user is displayed in order confirmation page')
+    assert driver.find_element(By.XPATH,'//*[@id="orderPaymentSuccess"]/div/div[1]/div/div[3]/label').is_displayed()
+    print('-- phone number of user is displayed in order confirmation page')
+    assert driver.find_element(By.XPATH,'//*[@id="orderPaymentSuccess"]/div/div[1]/div/div[2]/label[1]').is_displayed()
+    print('-- address of user is displayed in order confirmation page')
+    driver.implicitly_wait(10)
 
 
-def validate_order():
+def delete_order():
+    sleep(1)
+    print('------------*delete order*------------')
+    driver.find_element(By.XPATH, "//a[@id='hrefUserIcon']").click()
     driver.find_element(By.XPATH, "// div[ @ id = 'loginMiniTitle'] / label[2]").click()
     sleep(1)
-    if driver.find_element(By.XPATH,f'//td[@rowspan="1f"]/label[contains(text(),'
-                                 f'"{locators.order_no}")]').text == locators.order_no:
-        print(f'Order with order number {locators.order_no} is displayed in My Orders')
-    else:
-        print('--Order not found')
+    assert driver.find_element(By.XPATH,f"//td[@rowspan]/label[contains(.,'{locators.order_no}')]").is_displayed()
+    print(f'Order with order number {locators.order_no} is displayed in My Orders')
     sleep(1)
     driver.find_element(By.XPATH,"//a[@class='remove red ng-scope']").click()
+    driver.find_element(By.ID,'confBtn_1').click()
     sleep(1)
-    if driver.find_element(By.XPATH,f'//td[@rowspan="1f"]/label[contains(text(),'
-                                 f'"{locators.order_no}")]').text == locators.order_no:
-        print(f'Order with order number {locators.order_no} is not removed from My Orders')
-    else:
-        print(f'--Order not found, Hence, {locators.order_no} is removed')
+    assert driver.find_element(By.XPATH,"//div[@class='bigEmptyOrder center']/label[@class= 'roboto-bold ng-binding']").is_displayed()
+    print('--No orders text is displayed. Hence order is removed')
+
+def delete_user():
+    print('-------------*delete user*------------')
+    sleep(1)
+    driver.find_element(By.XPATH, "//a[@id='hrefUserIcon']").click()
+    driver.find_element(By.XPATH, "// div[ @ id = 'loginMiniTitle'] / label[1]").click()
+    sleep(1)
+    assert driver.find_element(By.XPATH, "//*[@id='myAccountContainer']/div[1]/div/div[1]/label").is_displayed()
+    print('--My account page is displayed')
+    sleep(1)
+    if driver.current_url== locators.my_account_url:
+        driver.find_element(By.XPATH, "//div[@class='deleteBtnText']").click()
+        driver.find_element(By.XPATH, "//div[@class='deletePopupBtn deleteRed']").click()
+        print(f'--user deleted at: {datetime.datetime.now()}---------')
+    sleep(2)
+    print("----------------test log in------------------")
+    driver.get(locators.aos_url)
+    driver.implicitly_wait(3)
+    driver.find_element(By.ID, 'menuUser').click()
+    driver.find_element(By.XPATH, "//input[@name='username']").send_keys(locators.aos_username)
+    sleep(1)
+    driver.find_element(By.XPATH, "//input[@name='password']").send_keys(locators.aos_password)
+    sleep(1)
+    driver.find_element(By.XPATH, "//button[@id='sign_in_btnundefined']").click()
+    assert driver.find_element(By.XPATH,"//label[@id='signInResultMessage']").is_displayed()
+    print("Incorrect username or password is message is displayed")
+
 
 
 
 # setup()
-# validate_dash_board()
+# #validate_dash_board()
 # create_new_account()
 # check_username_display()
 # logout()
 # login()
-# check_out_shopping_cart()
-# logout()
-# login()
-# validate_order()
+# #check_out_shopping_cart()
+# #delete_order()
+# delete_user()
 # teardown()
