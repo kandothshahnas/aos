@@ -87,6 +87,7 @@ def check_username_display():#check usename is displayed
 
 
 def logout():#log out user from AOS app
+    sleep(1)
     print('----------------*log out*-----------------')
     driver.find_element(By.XPATH, "//a[@id='hrefUserIcon']").click()
     driver.find_element(By.XPATH, "// div[ @ id = 'loginMiniTitle'] / label[3]").click()
@@ -96,10 +97,11 @@ def logout():#log out user from AOS app
 
 
 def login():# log in user to AOS app
+    sleep(1)
     print("----------------*log in*-------------------")
     driver.get(locators.aos_url)
     driver.implicitly_wait(3)
-    driver.find_element(By.ID, 'menuUser').click()
+    driver.find_element(By.ID, 'menuUserLink').click()
     driver.find_element(By.XPATH,"//input[@name='username']").send_keys(locators.aos_username)
     sleep(1)
     driver.find_element(By.XPATH,"//input[@name='password']").send_keys(locators.aos_password)
@@ -272,13 +274,13 @@ def validate_dash_board():
     sleep(1)
     driver.switch_to.window(window_after_linkedIn)
     sleep(10)
-    if  'linkedin' in driver.current_url:
-        print('--linkedIn link image is clicked ')
+    if  driver.current_url == locators.linkedin_url:
+        print(f'--linkedIn link image is clicked and navigated to {driver.current_url} ')
         driver.close()
         driver.switch_to.window(window_before)
         sleep(10)
     else:
-        print('--linkedIn image link is not clicked')
+        print('--ERROR!!!linkedIn image link is not clicked. Check your code')
         driver.switch_to.window(window_before)
         sleep(10)
     # check top menu SEARCH is clickable
@@ -344,7 +346,6 @@ def validate_dash_board():
             print(f'--shop now link for TABLETS is clicked and navigated to {driver.current_url}')
         else:
             print('--shop now link for TABLETS is not clicked')
-
     else:
         driver.get(locators.aos_url)
         driver.implicitly_wait(3)
@@ -497,31 +498,35 @@ def delete_user():
     sleep(1)
     if driver.current_url== locators.my_account_url:
         driver.find_element(By.XPATH, "//div[@class='deleteBtnText']").click()
-        driver.find_element(By.XPATH, "//div[@class='deletePopupBtn deleteRed']").click()
+        del_button = driver.find_element(By.XPATH, "//div[@class='deleteBtnContainer']/div[@class='deletePopupBtn deleteRed']")
+        ActionChains(driver).move_to_element(del_button).click(del_button).perform()
+        sleep(1)
         print(f'--user deleted at: {datetime.datetime.now()}---------')
+    else:
+        print('--Something went wrong')
     sleep(2)
+    sleep(1)
     print("----------------test log in------------------")
     driver.get(locators.aos_url)
     driver.implicitly_wait(3)
-    driver.find_element(By.ID, 'menuUser').click()
+    driver.find_element(By.ID,'menuUserLink').click()
+    sleep(0.25)
     driver.find_element(By.XPATH, "//input[@name='username']").send_keys(locators.aos_username)
     sleep(1)
     driver.find_element(By.XPATH, "//input[@name='password']").send_keys(locators.aos_password)
     sleep(1)
     driver.find_element(By.XPATH, "//button[@id='sign_in_btnundefined']").click()
     assert driver.find_element(By.XPATH,"//label[@id='signInResultMessage']").is_displayed()
-    print("Incorrect username or password is message is displayed")
-
-
+    print("Incorrect username or password message is displayed, hence confirmed user is deleted")
 
 
 # setup()
-# #validate_dash_board()
+# validate_dash_board()
 # create_new_account()
 # check_username_display()
 # logout()
 # login()
-# #check_out_shopping_cart()
-# #delete_order()
+# check_out_shopping_cart()
+# delete_order()
 # delete_user()
 # teardown()

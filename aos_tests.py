@@ -1,6 +1,5 @@
 import unittest
 import aos_methods as methods
-import aos_locators as locators
 
 
 class AOSPositiveTestCases(unittest.TestCase):
@@ -16,4 +15,5 @@ class AOSPositiveTestCases(unittest.TestCase):
         methods.check_username_display()
         methods.check_out_shopping_cart()
         methods.delete_order()
+        methods.delete_user()
         methods.teardown()
