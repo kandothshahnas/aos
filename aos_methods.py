@@ -1,26 +1,26 @@
 import datetime
 from time import sleep
-from selenium.common.exceptions import NoSuchElementException
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.support.ui import Select
 from selenium.webdriver.common.action_chains import ActionChains
-import random
+from selenium.common.exceptions import NoSuchElementException
 import aos_locators as locators
+
 s = Service(executable_path='../chromedriver.exe')
 driver = webdriver.Chrome(service=s)
 
-def setup():
+
+def setup():   # set up method
     print('-------------------------------*set up*----------------------')
-    print(f'-----------Test started @{datetime.datetime.now()}------------------')
-    #maximise window
-    driver.maximize_window()
+    print(f'-----------Test started @ {datetime.datetime.now()} ------------------')
+    driver.maximize_window()    # maximise window
     driver.implicitly_wait(30)
-    #navigate to advantageshoppingonline webpage
-    driver.get(locators.aos_url)
-    aos_title =driver.title
+    driver.get(locators.aos_url)     # navigate to advantage shopping online webpage
+    sleep(3)
+    aos_title = driver.title
     if driver.current_url == locators.aos_url and driver.title == aos_title:
         print(f'We are at the correct web page {driver.current_url}')
         print(f'We are seeing the title of web page as : {driver.title}')
@@ -28,57 +28,64 @@ def setup():
         print(f'We are not at the correct web page!! check your code')
         driver.close()  # close the current tab
         driver.quit()  # close the browser completely
+    sleep(3)
 
-def teardown():
+
+def teardown():   # Tear down method
     if driver is not None:
         print('-----------------*tear down*------------------')
-        print(f'Test completed at:{datetime.datetime.now()}')
+        print(f'Test completed at: {datetime.datetime.now()} ')
         driver.close()
         driver.quit()
 
-def create_new_account():#create new account for fake user in AOS app
+
+def create_new_account():   # create new account for fake user in AOS app
     print('-------------------*create new account*--------------')
     driver.implicitly_wait(3)
-    assert driver.find_element(By.ID,'menuUser').is_displayed()
-    #driver.implicitly_wait(3)
-    driver.find_element(By.ID,'menuUser').click()
+    assert driver.find_element(By.ID, 'menuUser').is_displayed()
+    driver.find_element(By.ID, 'menuUser').click()
     sleep(3)
     driver.find_element(By.XPATH, "//a[@class = 'create-new-account ng-scope']").click()
     sleep(1)
-    driver.find_element(By.XPATH,"//input[@name = 'usernameRegisterPage']").send_keys(locators.aos_username)
+    driver.find_element(By.XPATH, "//input[@name = 'usernameRegisterPage']").send_keys(locators.aos_username)
     sleep(1)
-    driver.find_element(By.XPATH,"//input[@name = 'emailRegisterPage']").send_keys(locators.aos_email)
+    driver.find_element(By.XPATH, "//input[@name = 'emailRegisterPage']").send_keys(locators.aos_email)
     sleep(1)
-    driver.find_element(By.XPATH,"//input[@name = 'passwordRegisterPage']").send_keys(locators.aos_password)
+    driver.find_element(By.XPATH, "//input[@name = 'passwordRegisterPage']").send_keys(locators.aos_password)
     sleep(1)
-    driver.find_element(By.XPATH,"//input[@name = 'confirm_passwordRegisterPage']").send_keys(locators.aos_password)
+    driver.find_element(By.XPATH, "//input[@name = 'confirm_passwordRegisterPage']").send_keys(locators.aos_password)
+    sleep(1)
     driver.find_element(By.XPATH, "//input[@name = 'first_nameRegisterPage']").send_keys(locators.first_name)
-    driver.find_element(By.XPATH, "//input[@name = 'last_nameRegisterPage']").send_keys(locators.last_name)
-    driver.find_element(By.XPATH, "//input[@name = 'phone_numberRegisterPage']").send_keys(locators.phone)
-    Select(driver.find_element(By.XPATH,"//select")).select_by_visible_text('Canada')
     sleep(1)
-    #driver.find_element(By.XPATH,"//select/option[@label='Canada']").click()
+    driver.find_element(By.XPATH, "//input[@name = 'last_nameRegisterPage']").send_keys(locators.last_name)
+    sleep(1)
+    driver.find_element(By.XPATH, "//input[@name = 'phone_numberRegisterPage']").send_keys(locators.phone)
+    sleep(1)
+    Select(driver.find_element(By.XPATH, "//select")).select_by_visible_text('Canada')
     sleep(1)
     driver.find_element(By.XPATH, "//input[@name = 'cityRegisterPage']").send_keys(locators.city)
+    sleep(1)
     driver.find_element(By.XPATH, "//input[@name = 'addressRegisterPage']").send_keys(locators.address)
+    sleep(1)
     driver.find_element(By.XPATH, "//input[@name = 'state_/_province_/_regionRegisterPage']").send_keys(locators.province)
+    sleep(1)
     driver.find_element(By.XPATH, "//input[@name = 'postal_codeRegisterPage']").send_keys(locators.postal_code)
     sleep(1)
-    driver.find_element(By.XPATH,"//input[@name = 'i_agree']").click()
-    sleep(1)
-    driver.find_element(By.ID,"register_btnundefined").click()
+    driver.find_element(By.XPATH, "//input[@name = 'i_agree']").click()
+    sleep(3)
+    driver.find_element(By.ID, "register_btnundefined").click()
     sleep(1)
     print(f'account for user {locators.full_name} is created successfully  '
-          f'with username: {locators.aos_username} at:{datetime.datetime.now()}')
+          f'with username: {locators.aos_username} at: {datetime.datetime.now()} ')
+    sleep(3)
 
 
-def check_username_display():#check usename is displayed
+def check_username_display():  # check username is displayed
     print('----------*check username displayed*----------')
     sleep(1)
-    if driver.find_element(By.XPATH,f"//a[@id = 'menuUserLink']/span[contains(., {locators.aos_username}) ]").is_displayed():
-        path_username=driver.find_element(By.XPATH,f"//a[@id = 'menuUserLink']/span[contains(., {locators.aos_username}) ]")
-        # username is captutured as logged_in_username
-        logged_in_username = path_username.text
+    if driver.find_element(By.XPATH, f"//a[@id = 'menuUserLink']/span[contains(., {locators.aos_username} ) ]").is_displayed():
+        path_username = driver.find_element(By.XPATH, f"//a[@id = 'menuUserLink']/span[contains(., {locators.aos_username}) ]")
+        logged_in_username = path_username.text     # username is captured as logged_in_username
         sleep(1)
         if logged_in_username == locators.aos_username:
             print(f'username {logged_in_username} is displayed at the top menu')
@@ -87,49 +94,49 @@ def check_username_display():#check usename is displayed
     sleep(1)
 
 
-def logout():#log out user from AOS app
+def logout():  # log out user from AOS app
     sleep(1)
     print('----------------*log out*-----------------')
     driver.find_element(By.XPATH, "//a[@id='hrefUserIcon']").click()
+    sleep(1)
     driver.find_element(By.XPATH, "// div[ @ id = 'loginMiniTitle'] / label[3]").click()
-    # breakpoint()
-    print(f'user  logged out successfuly at :{datetime.datetime.now()}')
+    print(f'user  logged out successfully at : {datetime.datetime.now()} ')
     sleep(1)
 
 
-def login():# log in user to AOS app
+def login():  # log in user to AOS app
     sleep(1)
     print("----------------*log in*-------------------")
     driver.get(locators.aos_url)
     driver.implicitly_wait(3)
     driver.find_element(By.ID, 'menuUserLink').click()
-    driver.find_element(By.XPATH,"//input[@name='username']").send_keys(locators.aos_username)
+    driver.find_element(By.XPATH, "//input[@name='username']").send_keys(locators.aos_username)
     sleep(1)
-    driver.find_element(By.XPATH,"//input[@name='password']").send_keys(locators.aos_password)
+    driver.find_element(By.XPATH, "//input[@name='password']").send_keys(locators.aos_password)
     sleep(1)
-    driver.find_element(By.XPATH,"//button[@id='sign_in_btnundefined']").click()
+    driver.find_element(By.XPATH, "//button[@id='sign_in_btnundefined']").click()
     sleep(1)
     print(f'user {locators.full_name} is logged in successfully at:{datetime.datetime.now()}')
 
-#Validate main page of AOS app
-def validate_dash_board():
+
+def validate_dash_board():   # Validate main page of AOS app
     print('--------------*validate dashboard*-------------')
-    # check the advantageDEMO logo is present
-    sleep(2)
+    sleep(2)      # check the advantageDEMO logo is present
+
     display = driver.find_element(By.XPATH, "//div[@class='logo']/a").is_displayed()
     sleep(0.25)
     if display:
-        print('--dashborad logo for AOS is displayed--')
+        print('--dashboard logo for AOS is displayed--')
     else:
-        print('--dashborad logo for AOS is not displayed--')
-    # check SPEAKERS text is diplayed
+        print('--dashboard logo for AOS is not displayed--')
+    sleep(1)    # check SPEAKERS text is displayed
     display = driver.find_element(By.ID, 'speakersTxt').text
     sleep(0.25)
     if display == 'SPEAKERS':
         print('--SPEAKERS text  is displayed--')
     else:
         print('--SPEAKERS text is not displayed--')
-    # check TABLETS text is displayed
+    sleep(1)    # check TABLETS text is displayed
     if driver.current_url == locators.aos_url:
         display = driver.find_element(By.ID, 'tabletsTxt').text
         sleep(0.25)
@@ -137,36 +144,35 @@ def validate_dash_board():
             print('-- TABLETS text  is displayed--')
         else:
             print('--TABLETS text is not displayed--')
-    # check  LAPTOPS text is displayed
+    sleep(0.25)   # check  LAPTOPS text is displayed
     display = driver.find_element(By.ID, "laptopsTxt").text
     sleep(1)
     if display == 'LAPTOPS':
         print('--  LAPTOPS text  is displayed--')
     else:
         print('-- LAPTOPS text is not displayed--')
-    # check  MICE text is displayed
+    sleep(0.25)  # check  MICE text is displayed
     display = driver.find_element(By.ID, "miceTxt").text
     sleep(1)
     if display == 'MICE':
         print('--  MICE text  is displayed--')
     else:
         print('-- MICE text is not displayed--')
-    # check  HEADPHONES text is displayed
+    sleep(0.25)  # check  HEADPHONES text is displayed
     display = driver.find_element(By.ID, "headphonesTxt").text
-    sleep(0.25)
+    sleep(1)
     if display == 'HEADPHONES':
         print('--  HEADPHONES text  is displayed--')
     else:
         print('-- HEADPHONES text is not displayed--')
-    # check top menu OUR PRODUCTS is clickable
+    sleep(0.25)  # check top menu OUR PRODUCTS is clickable
     driver.find_element(By.XPATH, "//a[contains(text(),'OUR PRODUCTS')]").click()
     sleep(1)
     if driver.find_element(By.ID, "speakersImg").is_displayed() and driver.current_url == locators.aos_url:
         print("--top menu OUR PRODUCTS link is clicked")
     else:
         print("--top menu OUR PRODUCTS  link is not clicked")
-
-    # check top menu SPECIAL OFFER is clickable
+    sleep(0.25)   # check top menu SPECIAL OFFER is clickable
     driver.find_element(By.XPATH, "//a[contains(text(),'SPECIAL OFFER')]").click()
     sleep(1)
     if driver.find_element(By.XPATH, "//h3[contains(.,'SPECIAL OFFER')]").is_displayed():
@@ -175,12 +181,12 @@ def validate_dash_board():
         driver.find_element(By.XPATH, "//a[contains(text(),'SPECIAL OFFER')]").send_keys(Keys.PAGE_DOWN)
     else:
         print('--top menu SPECIAL OFFER link is not clicked')
-    # check ALL YOU WANT FROM A TABLET text is displayed
-    if driver.find_element(By.XPATH,"//h2[contains(.,'ALL YOU WANT FROM A TABLET')]").text == 'ALL YOU WANT FROM A TABLET':
+    sleep(0.25)   # Check ALL YOU WANT FROM A TABLET text is displayed
+    if driver.find_element(By.XPATH, "//h2[contains(.,'ALL YOU WANT FROM A TABLET')]").text == 'ALL YOU WANT FROM A TABLET':
         print('--ALL YOU WANT FROM A TABLET text is displayed')
     else:
         print('--ALL YOU WANT FROM A TABLET text is not displayed')
-    # check top menu POPULAR ITEMS is clickable
+    sleep(0.25)  # check top menu POPULAR ITEMS is clickable
     if driver.current_url == locators.aos_url:
         driver.find_element(By.XPATH, "//a[contains(text(),'POPULAR ITEMS')]").click()
         sleep(1)
@@ -199,12 +205,12 @@ def validate_dash_board():
         else:
             print('--top menu POPULAR ITEMS link is not clicked')
             sleep(1)
-    # check POPULAR ITEMS text is displayed
+    sleep(0.25)  # check POPULAR ITEMS text is displayed
     if driver.find_element(By.XPATH, "//h3[contains(.,'POPULAR ITEMS')]").text == 'POPULAR ITEMS':
         print('--POPULAR ITEMS text is displayed')
     else:
         print('--POPULAR ITEMS text is  not displayed')
-    # check top menu CONTACT_US is clickable
+    sleep(0.25)   # check top menu CONTACT_US is clickable
     driver.find_element(By.XPATH, "//a[contains(text(),'CONTACT US')]").click()
     sleep(1)
     if driver.find_element(By.XPATH, "//h1[@class ='roboto-bold contact_us ng-scope']").is_displayed():
@@ -212,7 +218,7 @@ def validate_dash_board():
         print('--top menu CONTACT_US link is clicked')
     else:
         print('--top menu CONTACT_US link is not clicked')
-    # check CONTACT US form by sending a form
+    sleep(0.25)  # check CONTACT US form by sending a form
     print('-----------------*CONTACT US FORM*------------------')
     Select(driver.find_element(By.NAME, "categoryListboxContactUs")).select_by_index(1)
     sleep(1)
@@ -228,6 +234,7 @@ def validate_dash_board():
         print('--Thank you for contacting Advantage support. is displayed')
     else:
         print('--Thank you for contacting Advantage support. is not displayed')
+    sleep(2)
     driver.find_element(By.XPATH, "//a[@class='a-button ng-binding']").click()
     print('--CONTINUE SHOPPING button is clicked')
     # check FOLLOW US text is displayed
@@ -235,7 +242,7 @@ def validate_dash_board():
         print('--FOLLOW US text is displayed')
     else:
         print('--FOLLOW US text is not displayed')
-    # check facebook link image is clickable
+    sleep(0.25)   # check facebook link image is clickable
     window_before = driver.window_handles[0]
     assert driver.find_element(By.NAME, "follow_facebook").is_displayed()
     print("--facebook image  is displayed")
@@ -245,19 +252,20 @@ def validate_dash_board():
     driver.switch_to.window(window_after_fb)
     sleep(10)
     if driver.current_url == locators.fb_url:
-        print(f'--facebook link image is clicked and navigated to {driver.current_url}')
+        print(f'--facebook link image is clicked and navigated to {driver.current_url} ')
         driver.close()
         driver.switch_to.window(window_before)
         sleep(10)
     else:
         print('--facebook image link is not clicked')
 
-    # check Twitter link image is clickable
+    sleep(0.25)   # check Twitter link image is clickable
     assert driver.find_element(By.NAME, "follow_twitter").is_displayed()
     print('--twitter image is displayed')
+    sleep(1)
     driver.find_element(By.NAME, "follow_twitter").click()
     window_after_twitter = driver.window_handles[1]
-    sleep(1)
+    sleep(2)
     driver.switch_to.window(window_after_twitter)
     sleep(10)
     if driver.current_url == locators.twitter_url:
@@ -267,24 +275,28 @@ def validate_dash_board():
         sleep(10)
     else:
         print('--twitter image link is not clicked')
-    # check linkedIn image is clickable
+        driver.close()
+        driver.switch_to.window(window_before)
+        sleep(10)
+    sleep(0.25)   # check linkedIn image is clickable
     assert driver.find_element(By.NAME, "follow_linkedin").is_displayed()
     print('--linkedIn image is displayed')
     driver.find_element(By.NAME, "follow_linkedin").click()
-    window_after_linkedIn = driver.window_handles[1]
+    window_after_linkedin = driver.window_handles[1]
     sleep(1)
-    driver.switch_to.window(window_after_linkedIn)
+    driver.switch_to.window(window_after_linkedin)
     sleep(10)
-    if  driver.current_url == locators.linkedin_url:
+    if driver.current_url == locators.linkedin_url:
         print(f'--linkedIn link image is clicked and navigated to {driver.current_url} ')
         driver.close()
         driver.switch_to.window(window_before)
         sleep(10)
     else:
         print('--ERROR!!!linkedIn image link is not clicked. Check your code')
+        driver.close()
         driver.switch_to.window(window_before)
         sleep(10)
-    # check top menu SEARCH is clickable
+    sleep(0.25)  # check top menu SEARCH is clickable
     driver.find_element(By.XPATH, "//a[@title = 'SEARCH']").click()
     sleep(1)
     if driver.find_element(By.XPATH, "//input[@id='autoComplete']").is_displayed():
@@ -292,7 +304,7 @@ def validate_dash_board():
         print('--top menu SEARCH link is clickable')
     else:
         print('--top menu SEARCH link is not clickable')
-    # check top menu USER icon is clickable
+    sleep(0.25)  # check top menu USER icon is clickable
     driver.find_element(By.ID, 'menuUser').click()
     sleep(1)
     if driver.find_element(By.XPATH, "//div[@class='login ng-scope']").is_displayed():
@@ -303,7 +315,7 @@ def validate_dash_board():
         sleep(1)
     else:
         print('--top menu USER icon link is not clickable')
-    # check top menu Shopping cart icon is clickable
+    sleep(0.25)  # check top menu Shopping cart icon is clickable
     driver.find_element(By.ID, "menuCart").click()
     sleep(1)
     if driver.current_url == locators.cart_url:
@@ -313,16 +325,15 @@ def validate_dash_board():
     else:
         print('--top menu CART icon link is not clickable')
         sleep(1)
-    # check shop now link for SPEAKERS is clickable
+    sleep(0.25)  # check shop now link for SPEAKERS is clickable
     if driver.current_url == locators.aos_url:
         sleep(1)
-        # speaker =driver.find_element(By.XPATH, "//label[@id='speakersLink']")
         speaker = driver.find_element(By.ID, 'speakersLink')
         sleep(1)
         ActionChains(driver).move_to_element(speaker).click(speaker).perform()
         sleep(1)
-        if driver.find_element(By.XPATH,"//h3[@class='categoryTitle roboto-regular sticky ng-binding']").text == 'SPEAKERS':
-            print(f'--shop now link for SPEAKERS is clicked and navigated to {driver.current_url}')
+        if driver.find_element(By.XPATH, "//h3[@class='categoryTitle roboto-regular sticky ng-binding']").text == 'SPEAKERS':
+            print(f'--shop now link for SPEAKERS is clicked and navigated to {driver.current_url} ')
         else:
             print(f'--shop now link for SPEAKERS is not clicked')
     else:
@@ -332,18 +343,18 @@ def validate_dash_board():
         sleep(1)
         ActionChains(driver).move_to_element(speaker).click(speaker).perform()
         sleep(1)
-        if driver.find_element(By.XPATH,"//h3[@class='categoryTitle roboto-regular sticky ng-binding']").text == 'SPEAKERS':
+        if driver.find_element(By.XPATH, "//h3[@class='categoryTitle roboto-regular sticky ng-binding']").text == 'SPEAKERS':
             print(f'--shop now link for SPEAKERS is clicked and navigated to {driver.current_url}')
         else:
             print(f'--shop now link for SPEAKERS is not clicked')
-    # Check shop now link for TABLETS is clickable
+    sleep(0.25)   # Check shop now link for TABLETS is clickable
     if driver.current_url == locators.aos_url:
         driver.implicitly_wait(3)
         tablets = driver.find_element(By.ID, "tabletsLink")
         sleep(1)
         ActionChains(driver).move_to_element(tablets).click(tablets).perform()
         sleep(1)
-        if driver.find_element(By.XPATH,"//h3[@class='categoryTitle roboto-regular sticky ng-binding']").text == 'TABLETS':
+        if driver.find_element(By.XPATH, "//h3[@class='categoryTitle roboto-regular sticky ng-binding']").text == 'TABLETS':
             print(f'--shop now link for TABLETS is clicked and navigated to {driver.current_url}')
         else:
             print('--shop now link for TABLETS is not clicked')
@@ -354,7 +365,7 @@ def validate_dash_board():
         sleep(1)
         ActionChains(driver).move_to_element(tablets).click(tablets).perform()
         sleep(1)
-        if driver.find_element(By.XPATH,"//h3[@class='categoryTitle roboto-regular sticky ng-binding']").text == 'TABLETS':
+        if driver.find_element(By.XPATH, "//h3[@class='categoryTitle roboto-regular sticky ng-binding']").text == 'TABLETS':
             print(f'--shop now link for TABLETS is clicked and navigated to {driver.current_url}')
         else:
             print('--shop now link for TABLETS is not clicked')
@@ -365,11 +376,10 @@ def validate_dash_board():
         sleep(1)
         ActionChains(driver).move_to_element(laptops).click(laptops).perform()
         sleep(1)
-        if driver.find_element(By.XPATH,"//h3[@class='categoryTitle roboto-regular sticky ng-binding']").text == 'LAPTOPS':
+        if driver.find_element(By.XPATH, "//h3[@class='categoryTitle roboto-regular sticky ng-binding']").text == 'LAPTOPS':
             print(f'--shop now link for LAPTOPS is clicked and navigated to {driver.current_url}')
         else:
             print('--shop now link for LAPTOPS is not clicked')
-
     else:
         driver.get(locators.aos_url)
         driver.implicitly_wait(3)
@@ -377,7 +387,7 @@ def validate_dash_board():
         sleep(1)
         ActionChains(driver).move_to_element(laptops).click(laptops).perform()
         sleep(1)
-        if driver.find_element(By.XPATH,"//h3[@class='categoryTitle roboto-regular sticky ng-binding']").text == 'LAPTOPS':
+        if driver.find_element(By.XPATH, "//h3[@class='categoryTitle roboto-regular sticky ng-binding']").text == 'LAPTOPS':
             print(f'--shop now link for LAPTOPS is clicked and navigated to {driver.current_url}')
         else:
             print('--shop now link for LAPTOPS is not clicked')
@@ -388,7 +398,7 @@ def validate_dash_board():
         sleep(1)
         ActionChains(driver).move_to_element(mice).click(mice).perform()
         sleep(1)
-        if driver.find_element(By.XPATH,"//h3[@class='categoryTitle roboto-regular sticky ng-binding']").text == 'MICE':
+        if driver.find_element(By.XPATH, "//h3[@class='categoryTitle roboto-regular sticky ng-binding']").text == 'MICE':
             print(f'--shop now link for MICE is clicked and navigated to {driver.current_url}')
         else:
             print('--shop now link for Mice is not clicked')
@@ -399,7 +409,7 @@ def validate_dash_board():
         sleep(1)
         ActionChains(driver).move_to_element(mice).click(mice).perform()
         sleep(1)
-        if driver.find_element(By.XPATH,"//h3[@class='categoryTitle roboto-regular sticky ng-binding']").text == 'MICE':
+        if driver.find_element(By.XPATH, "//h3[@class='categoryTitle roboto-regular sticky ng-binding']").text == 'MICE':
             print(f'--shop now link for MICE is clicked and navigated to {driver.current_url}')
         else:
             print('--shop now link for MICE is not clicked')
@@ -410,58 +420,59 @@ def validate_dash_board():
         sleep(1)
         ActionChains(driver).move_to_element(hphones).click(hphones).perform()
         sleep(1)
-        if driver.find_element(By.XPATH,"//h3[@class='categoryTitle roboto-regular sticky ng-binding']").text == 'HEADPHONES':
+        if driver.find_element(By.XPATH, "//h3[@class='categoryTitle roboto-regular sticky ng-binding']").text == 'HEADPHONES':
             print(f'--shop now link for HEADPHONES is clicked and navigated to {driver.current_url}')
         else:
             print('--shop now link for HEADPHONES is not clicked')
     else:
         driver.get(locators.aos_url)
         driver.implicitly_wait(3)
-        hphones = driver.find_element(By.ID, "headphonesLink")
+        head_phones = driver.find_element(By.ID, "headphonesLink")
         sleep(1)
-        ActionChains(driver).move_to_element(hphones).click(hphones).perform()
+        ActionChains(driver).move_to_element(head_phones).click(head_phones).perform()
         sleep(1)
-        if driver.find_element(By.XPATH,"//h3[@class='categoryTitle roboto-regular sticky ng-binding']").text == 'HEADPHONES':
+        if driver.find_element(By.XPATH, "//h3[@class='categoryTitle roboto-regular sticky ng-binding']").text == 'HEADPHONES':
             print(f'--shop now link for HEADPHONES is clicked and navigated to {driver.current_url}')
         else:
             print('--shop now link for HEADPHONES is not clicked')
+    sleep(3)
+
 
 def check_out_shopping_cart():
     print('------------*checkout shopping cart*---------')
     driver.find_element(By.XPATH, "//a[contains(text(),'POPULAR ITEMS')]").click()
     sleep(2)
-    driver.find_element(By.XPATH,"//a[@href='#/product/16']").click()
+    driver.find_element(By.XPATH, "//a[@href='#/product/16']").click()
     sleep(1)
-    driver.find_element(By.XPATH,"// button[ @ name = 'save_to_cart']").click()
+    driver.find_element(By.XPATH, "// button[ @ name = 'save_to_cart']").click()
     print('--item added to cart')
-    sleep(2)
+    sleep(3)
     driver.find_element(By.ID, "menuCart").click()
-    sleep(2)
-    driver.find_element(By.ID,"checkOutButton").click()
-    #sleep(0.25)
-    # print('---clicked')
+    sleep(3)
+    driver.find_element(By.ID, "checkOutButton").click()
     driver.implicitly_wait(10)
-    driver.find_element(By.XPATH,"//button[contains(text(),'NEXT')]").click()
+    driver.find_element(By.XPATH, "//button[contains(text(),'NEXT')]").click()
     sleep(1)
-    driver.find_element(By.NAME,"safepay_username").send_keys(locators.aos_username)
+    driver.find_element(By.NAME, "safepay_username").send_keys(locators.aos_username)
     sleep(1)
-    driver.find_element(By.NAME,"safepay_password").send_keys(locators.aos_password)
+    driver.find_element(By.NAME, "safepay_password").send_keys(locators.aos_password)
     sleep(1)
-    driver.find_element(By.ID,"pay_now_btn_SAFEPAY").click()
-    sleep(1)
-    if driver.find_element(By.XPATH,"//span[@class='roboto-regular ng-scope']").text=='Thank_you_for_buying_with_Advantage':
-        print('--Order placed and Thank_you_for_buying_with_Advantage message is displayed')
+    driver.find_element(By.ID, "pay_now_btn_SAFEPAY").click()
+    sleep(3)
+    thankyou = 'Thank you for buying with Advantage'
+    if thankyou in driver.find_element(By.XPATH, "//div[@id='orderPaymentSuccess']/h2/span").text:
+        print('Thank you for buying with Advantage message is displayed')
     else:
-        print('Thank_you_for_buying_with_Advantage not displayed')
+        print('Thank you for buying with Advantage is not displayed')
     sleep(1)
     locators.tracking_no = driver.find_element(By.ID, 'trackingNumberLabel').text
     print(f'--Tracking Number: {locators.tracking_no}')
     sleep(1)
-    locators.order_no = driver.find_element(By.ID,'orderNumberLabel').text
+    locators.order_no = driver.find_element(By.ID, 'orderNumberLabel').text
     print(f'--Order Number: {locators.order_no}')
     sleep(1)
-    locators.order_date = driver.find_element(By.XPATH,"//label[contains(.,'Date ordered')]").text
-    print(f'--Order date: {locators.order_date}')
+    locators.order_date = driver.find_element(By.XPATH, "//label[contains(.,'Date ordered')]").text
+    print(f'--Order date: {locators.order_date} ')
     sleep(1)
     driver.implicitly_wait(10)
 
@@ -472,25 +483,33 @@ def delete_order():
     driver.find_element(By.XPATH, "//a[@id='hrefUserIcon']").click()
     driver.find_element(By.XPATH, "// div[ @ id = 'loginMiniTitle'] / label[2]").click()
     sleep(1)
-    assert driver.find_element(By.XPATH,f"//td[@rowspan]/label[contains(.,'{locators.order_no}')]").is_displayed()
+    assert driver.find_element(By.XPATH, f"//td[@rowspan]/label[contains(.,'{locators.order_no}')]").is_displayed()
     print(f'Order with order number {locators.order_no} is displayed in My Orders')
+    sleep(2)
+    driver.find_element(By.XPATH, "//a[@class='remove red ng-scope']").click()
     sleep(1)
-    driver.find_element(By.XPATH,"//a[@class='remove red ng-scope']").click()
-    driver.find_element(By.ID,'confBtn_1').click()
+    driver.find_element(By.ID, 'confBtn_1').click()
     sleep(1)
-    assert driver.find_element(By.XPATH,"//div[@class='bigEmptyOrder center']/label[@class= 'roboto-bold ng-binding']").is_displayed()
-    print('--No orders text is displayed. Hence order is removed')
+    try:
+        if driver.find_element(By.XPATH, f"//td[@rowspan]/label[contains(.,'{locators.order_no}')]").is_displayed():
+            print(f'Order with order number {locators.order_no} is displayed in My Orders')
+    except NoSuchElementException as nse:
+        print(f' Order with order number {locators.order_no} is  not displayed in My Orders, '
+              f'Hence order is removed')
+    sleep(3)
+
 
 def delete_user():
     print('-------------*delete user*------------')
-    sleep(1)
+    sleep(3)
     driver.find_element(By.XPATH, "//a[@id='hrefUserIcon']").click()
-    driver.find_element(By.XPATH, "// div[ @ id = 'loginMiniTitle'] / label[1]").click()
     sleep(1)
-    assert driver.find_element(By.XPATH, "//*[@id='myAccountContainer']/div[1]/div/div[1]/label").is_displayed()
+    driver.find_element(By.XPATH, "// div[ @ id = 'loginMiniTitle'] / label[1]").click()
+    sleep(3)
+    assert driver.find_element(By.ID, "myAccountContainer").is_displayed()
     print('--My account page is displayed')
     sleep(1)
-    if driver.current_url== locators.my_account_url:
+    if driver.current_url == locators.my_account_url:
         driver.execute_script("window.scrollTo(1000,1000 )")
         sleep(3)
         driver.find_element(By.CLASS_NAME, 'deleteBtnText').click()
@@ -499,23 +518,23 @@ def delete_user():
         sleep(3)
         print(f'--user deleted at: {datetime.datetime.now()}---------')
     else:
-        print('--Something went wrong')
-    sleep(2)
-    sleep(1)
-    print("----------------test log in------------------")
+        print('--Something went wrong, user not deleted')
+    sleep(3)
+    print("----------------check user delete------------------")
     driver.get(locators.aos_url)
     driver.implicitly_wait(3)
-    driver.find_element(By.ID,'menuUserLink').click()
+    driver.find_element(By.ID, 'menuUserLink').click()
     sleep(0.25)
     driver.find_element(By.XPATH, "//input[@name='username']").send_keys(locators.aos_username)
     sleep(1)
     driver.find_element(By.XPATH, "//input[@name='password']").send_keys(locators.aos_password)
     sleep(1)
     driver.find_element(By.XPATH, "//button[@id='sign_in_btnundefined']").click()
-    assert driver.find_element(By.XPATH,"//label[@id='signInResultMessage']").is_displayed()
+    assert driver.find_element(By.XPATH, "//label[@id='signInResultMessage']").is_displayed()
     print("Incorrect username or password message is displayed, hence confirmed user is deleted")
+    sleep(3)
 
-#
+
 # setup()
 # # # validate_dash_board()
 # create_new_account()

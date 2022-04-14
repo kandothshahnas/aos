@@ -4,7 +4,7 @@ import aos_methods as methods
 
 class AOSPositiveTestCases(unittest.TestCase):
 
-    @staticmethod  # signal to Unittest framework that this is a function inside the class (vs. @classmethod)
+    @staticmethod  # signal to Unittest framework that this is a function inside the class (vs. @class method)
     def test_create_new_user():
         methods.setup()
         methods.validate_dash_board()
