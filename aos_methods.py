@@ -7,6 +7,7 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.support.ui import Select
 from selenium.webdriver.common.action_chains import ActionChains
+import random
 import aos_locators as locators
 s = Service(executable_path='../chromedriver.exe')
 driver = webdriver.Chrome(service=s)
@@ -427,7 +428,6 @@ def validate_dash_board():
 
 def check_out_shopping_cart():
     print('------------*checkout shopping cart*---------')
-    #random.choice([i for i in range(1, 35) if i != 13])
     driver.find_element(By.XPATH, "//a[contains(text(),'POPULAR ITEMS')]").click()
     sleep(2)
     driver.find_element(By.XPATH,"//a[@href='#/product/16']").click()
@@ -454,21 +454,15 @@ def check_out_shopping_cart():
     else:
         print('Thank_you_for_buying_with_Advantage not displayed')
     sleep(1)
-    locators.tracking_no = driver.find_element(By.XPATH,"//label[@id='trackingNumberLabel']").text
+    locators.tracking_no = driver.find_element(By.ID, 'trackingNumberLabel').text
     print(f'--Tracking Number: {locators.tracking_no}')
     sleep(1)
-    locators.order_no = driver.find_element(By.XPATH,"//label[@id='orderNumberLabel']").text
+    locators.order_no = driver.find_element(By.ID,'orderNumberLabel').text
     print(f'--Order Number: {locators.order_no}')
     sleep(1)
     locators.order_date = driver.find_element(By.XPATH,"//label[contains(.,'Date ordered')]").text
     print(f'--Order date: {locators.order_date}')
     sleep(1)
-    assert driver.find_element(By.XPATH,"//*[@id='orderPaymentSuccess']/div/div[1]/div/div[1]/label").is_displayed()
-    print('--Full name of user is displayed in order confirmation page')
-    assert driver.find_element(By.XPATH,'//*[@id="orderPaymentSuccess"]/div/div[1]/div/div[3]/label').is_displayed()
-    print('-- phone number of user is displayed in order confirmation page')
-    assert driver.find_element(By.XPATH,'//*[@id="orderPaymentSuccess"]/div/div[1]/div/div[2]/label[1]').is_displayed()
-    print('-- address of user is displayed in order confirmation page')
     driver.implicitly_wait(10)
 
 
@@ -497,10 +491,12 @@ def delete_user():
     print('--My account page is displayed')
     sleep(1)
     if driver.current_url== locators.my_account_url:
-        driver.find_element(By.XPATH, "//div[@class='deleteBtnText']").click()
-        del_button = driver.find_element(By.XPATH, "//div[@class='deleteBtnContainer']/div[@class='deletePopupBtn deleteRed']")
-        ActionChains(driver).move_to_element(del_button).click(del_button).perform()
-        sleep(1)
+        driver.execute_script("window.scrollTo(1000,1000 )")
+        sleep(3)
+        driver.find_element(By.CLASS_NAME, 'deleteBtnText').click()
+        sleep(3)
+        driver.find_element(By.CLASS_NAME, 'deletePopupBtn').click()
+        sleep(3)
         print(f'--user deleted at: {datetime.datetime.now()}---------')
     else:
         print('--Something went wrong')
@@ -519,14 +515,14 @@ def delete_user():
     assert driver.find_element(By.XPATH,"//label[@id='signInResultMessage']").is_displayed()
     print("Incorrect username or password message is displayed, hence confirmed user is deleted")
 
-
+#
 # setup()
-# validate_dash_board()
+# # # validate_dash_board()
 # create_new_account()
 # check_username_display()
-# logout()
-# login()
+# # # logout()
+# # # login()
 # check_out_shopping_cart()
-# delete_order()
+# # # delete_order()
 # delete_user()
-# teardown()
+# # teardown()
