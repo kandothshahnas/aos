@@ -23,3 +23,4 @@ order_no = 0
 tracking_no = 0
 order_date = ' '
 my_account_url = 'https://advantageonlineshopping.com/#/myAccount'
+element = ' '
